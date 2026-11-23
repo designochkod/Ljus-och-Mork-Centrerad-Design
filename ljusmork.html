@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light/Dark Switch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #ffffff;
+            --color-text: #1a1a1a;
+            --color-bg-secondary: #f5f5f5;
+            --color-border: #e0e0e0;
+            --color-accent: #0066cc;
+            --color-accent-hover: #0052a3;
+            --color-switch-bg: #e0e0e0;
+            --color-switch-toggle: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #1a1a1a;
+            --color-text: #ffffff;
+            --color-bg-secondary: #2a2a2a;
+            --color-border: #404040;
+            --color-accent: #4d94ff;
+            --color-accent-hover: #6ba3ff;
+            --color-switch-bg: #404040;
+            --color-switch-toggle: #1a1a1a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--color-bg);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .theme-switch {
+            appearance: none;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            border-radius: 9999px;
+            width: 60px;
+            height: 32px;
+            background-color: var(--color-switch-bg);
+            transition: background-color 0.3s ease;
+            position: relative;
+            padding: 0 0.5rem;
+        }
+
+        .theme-switch:hover {
+            background-color: var(--color-border);
+        }
+
+        .theme-switch:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .switch-icons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .switch-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            flex-shrink: 0;
+        }
+
+        .switch-toggle {
+            position: absolute;
+            left: 4px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--color-switch-toggle);
+            border-radius: 50%;
+            transition: left 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            z-index: 2;
+        }
+
+        [data-theme="dark"] .switch-toggle {
+            left: calc(100% - 28px);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .content-section {
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-accent);
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--color-text);
+            line-height: 1.8;
+        }
+
+        .card {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--color-accent);
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--color-accent-hover);
+            text-decoration: underline;
+        }
+
+        code {
+            background-color: var(--color-bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: var(--color-accent);
+            color: var(--color-bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--color-accent-hover);
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">Namn / Logo</a>
+            <button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Toggle between light and dark mode">
+                <div class="switch-icons">
+                    <div class="switch-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" viewBox="0 0 21 21" aria-hidden="true">
+                            <mask id="light_mode_svg__a" width="21" height="21" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+                                <path fill="#D9D9D9" d="M.75.085h20v20h-20z"></path>
+                            </mask>
+                            <g mask="url(#light_mode_svg__a)">
+                                <mask id="light_mode_svg__b" width="21" height="21" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+                                    <path fill="#D9D9D9" d="M.75.085h20v20h-20z"></path>
+                                </mask>
+                                <g mask="url(#light_mode_svg__b)">
+                                    <path fill="currentColor" d="M10.745 14.085q-1.662 0-2.828-1.171Q6.75 11.742 6.75 10.08t1.172-2.828q1.17-1.167 2.833-1.167 1.662 0 2.828 1.171 1.167 1.172 1.167 2.834t-1.171 2.828-2.834 1.167m-5.38-3.136h-3.73V9.22h3.73zm14.5 0h-3.73V9.22h3.73zM9.885 4.7V.97h1.73V4.7zm0 14.5V15.47h1.73v3.73zM6.35 6.88l-2.3-2.242L5.266 3.32 7.56 5.637zm9.885 9.886-2.273-2.253 1.185-1.232 2.305 2.253zM13.924 5.69l2.274-2.263L17.43 4.6l-2.232 2.315zm-9.937 9.88 2.336-2.232 1.19 1.144-2.19 2.326z"></path>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="switch-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" aria-hidden="true">
+                            <mask id="dark_mode_svg__a" width="19" height="19" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+                                <path fill="#D9D9D9" d="M.75.085h18v18h-18z"></path>
+                            </mask>
+                            <g mask="url(#dark_mode_svg__a)">
+                                <path fill="currentColor" d="M9.75 15.835q-2.813 0-4.781-1.969Q2.999 11.898 3 9.085t1.969-4.781q1.968-1.97 4.781-1.969a7 7 0 0 1 1.012.075 4 4 0 0 0-1.228 1.416 4 4 0 0 0-.459 1.884q0 1.687 1.181 2.869 1.182 1.18 2.869 1.181 1.032 0 1.894-.46a4 4 0 0 0 1.406-1.228 6.4 6.4 0 0 1 .075 1.013q0 2.813-1.969 4.781-1.968 1.97-4.781 1.969"></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="switch-toggle"></div>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-section">
+            <h1>Välkommen</h1>
+            <p>Denna sida demonstrerar en modern light/dark mode switcher med CSS variabler. Klicka på switchen i headern för att byta tema.</p>
+        </div>
+
+        <div class="card">
+            <h2>Funktioner</h2>
+            <p>Denna design innehåller:</p>
+            <ul>
+                <li>Sticky header som stannar längst upp</li>
+                <li>Snygg och modern theme switcher</li>
+                <li>CSS variabler för enkel temning</li>
+                <li>Smooth transitions mellan teman</li>
+                <li>Tillgänglig design med ARIA labels</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Design</h2>
+            <p>Designen är skapad för att vara:</p>
+            <ul>
+                <li>Responsiv och mobilvänlig</li>
+                <li>Snabb och effektiv</li>
+                <li>Lätt att anpassa med CSS variabler</li>
+                <li>Tillgänglig för alla användare</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Hur det fungerar</h2>
+            <p>Switchen använder CSS variabler för att definiera färger. Genom att ändra attributet data-theme på html-elementet uppdateras alla färger automatiskt.</p>
+        </div>
+    </main>
+
+    <script>
+        const themeSwitch = document.querySelector('.theme-switch');
+        const htmlElement = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        themeSwitch.setAttribute('aria-checked', savedTheme === 'dark');
+        themeSwitch.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            htmlElement.setAttribute('data-theme', newTheme);
+            themeSwitch.setAttribute('aria-checked', newTheme === 'dark');
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
